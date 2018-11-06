@@ -38,27 +38,27 @@ export class CameraCaptureComponent implements OnInit, OnDestroy {
       }
   }
 
-stop(){
-  this.video.nativeElement.pause();
-  this.video.nativeElement.src=null;
-  let tracks = this.stream.getTracks();
-  for (const track of tracks) {
-    track.stop();
+  stop(){
+    this.video.nativeElement.pause();
+    this.video.nativeElement.src=null;
+    let tracks = this.stream.getTracks();
+    for (const track of tracks) {
+      track.stop();
+    }
   }
-}
 
-public capture() {
-  this.video.nativeElement.pause();
-  var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video.nativeElement, 0, 0, 640, 480);
-  var imgUri= this.canvas.nativeElement.toDataURL("image/png");
-  this.snap.emit(imgUri);
-  this.captures.push(imgUri);
-  this.stop();
-}  
-public captureContinious():string {
-  this.showCaptureButton=false;
-  var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video.nativeElement, 0, 0, 640, 480);
-  return  this.canvas.nativeElement.toDataURL("image/png");
+  public capture() {
+    this.video.nativeElement.pause();
+    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video.nativeElement, 0, 0, 640, 480);
+    var imgUri= this.canvas.nativeElement.toDataURL("image/png");
+    this.snap.emit(imgUri);
+    this.captures.push(imgUri);
+    this.stop();
+  }  
+  public captureContinious():string {
+    this.showCaptureButton=false;
+    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video.nativeElement, 0, 0, 640, 480);
+    return  this.canvas.nativeElement.toDataURL("image/png");
 
-}
+  }
 }

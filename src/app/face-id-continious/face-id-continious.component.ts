@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CameraCaptureComponent} from '../camera-capture/camera-capture.component';
 import { FaceApiService } from '../services/face-api-service.service';
 import * as _ from 'lodash';
@@ -11,6 +11,8 @@ import * as _ from 'lodash';
 export class FaceIdContiniousComponent implements OnInit, OnDestroy {
   run: boolean;
   timerToken: NodeJS.Timer;
+  @Output() detectedFace = new EventEmitter<string>();
+
   ngOnDestroy(): void {
     this.run=false;
     clearInterval(this.timerToken);
@@ -54,8 +56,12 @@ export class FaceIdContiniousComponent implements OnInit, OnDestroy {
           detectedFace.identifiedPersonId = identifiedFace.candidates[0].personId;
           detectedFace.identifiedPersonConfidence = identifiedFace.candidates[0].confidence;
           var pr= await this.faceApi.getPerson(selectedGroupId, identifiedFace.candidates[0].personId).toPromise();
+          
+          //display name for demo purpose
           this.detectedPerson = pr.name;
-          //TODO throw event to authorize unlock of refresh token
+
+          //emit event for dependent components
+          this.detectedFace.emit(identifiedFace.candidates[0].personId);
         }
       }
     } catch (error) {
