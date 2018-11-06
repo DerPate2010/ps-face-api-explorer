@@ -29,14 +29,12 @@ export class FaceTesterComponent implements OnInit {
     });
   }
 
-  detect() {
+  async detect() {
     this.loading = true;
-    this.faceApi.detect(this.imageUrl).subscribe(data => {
-      this.detectedFaces = data;
-      console.log('**detect results', this.detectedFaces);
-      this.loading = false;
-    });
-
+    var data = await this.faceApi.detect(this.imageUrl);
+    this.detectedFaces = data;
+    console.log('**detect results', this.detectedFaces);
+    this.loading = false;
   }
 
   faceClicked(face) {

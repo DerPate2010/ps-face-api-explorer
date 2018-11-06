@@ -5,10 +5,17 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/of';
 
+interface AddFaceResult{
+  persistedFaceId:string
+}
+interface FaceDetectResult{
+  faceId:string
+}
+
 @Injectable()
 export class FaceApiService {
 
-  private baseUrl = '<specify Face API base URL here>';
+  private baseUrl = 'https://westeurope.api.cognitive.microsoft.com/face/v1.0';
 
   constructor(private http: HttpClient) { }
 
@@ -42,7 +49,7 @@ export class FaceApiService {
   }
 
   getPerson(personGroupId, personId) {
-    return this.http.get<any[]>(`${this.baseUrl}/persongroups/${personGroupId}/persons/${personId}`, httpOptions);    
+    return this.http.get<any>(`${this.baseUrl}/persongroups/${personGroupId}/persons/${personId}`, httpOptions);    
   }
 
   // ***** Person Operations *****
@@ -75,9 +82,26 @@ export class FaceApiService {
     return this.http.get(`${this.baseUrl}/persongroups/${personGroupId}/persons/${personId}/persistedfaces/${faceId}`, httpOptions);
   }
 
-  addPersonFace(personGroupId, personId, url) {
-    return this.http.post<any>(`${this.baseUrl}/persongroups/${personGroupId}/persons/${personId}/persistedfaces?userData=${url}`, { url: url}, httpOptions);
-  }
+  async addPersonFace(personGroupId, personId, url):Promise<AddFaceResult> {
+    let urlStr:string =url;
+    if (urlStr.startsWith("data:image")){
+      let data = await fetch(urlStr);
+      let blob = await data.blob();
+      let ret= await fetch(`${this.baseUrl}/persongroups/${personGroupId}/persons/${personId}/persistedfaces`,{
+        method:'POST',
+        headers: {
+          "Content-Type": "application/octet-stream",
+          'Ocp-Apim-Subscription-Key': 'd3d59f8ca8af4c7db5dbbcff898e6a37'
+        },
+        body:blob,
+      });
+      return <AddFaceResult> await ret.json();
+      //return this.http.post<any>(`${this.baseUrl}/persongroups/${personGroupId}/persons/${personId}/persistedfaces`, buf, httpOptions);
+    }
+    else{
+      return this.http.post<AddFaceResult>(`${this.baseUrl}/persongroups/${personGroupId}/persons/${personId}/persistedfaces?userData=${url}`, { url: url}, httpOptions).toPromise();
+    }
+   }  
 
   deletePersonFace(personGroupId, personId, faceId) {
     return this.http.delete(`${this.baseUrl}/persongroups/${personGroupId}/persons/${personId}/persistedfaces/${faceId}`, httpOptions);
@@ -95,8 +119,26 @@ export class FaceApiService {
 
   // ***** Face Operations *****
 
-  detect(url) {
-    return this.http.post<any[]>(`${this.baseUrl}/detect?returnFaceLandmarks=false&returnFaceAttributes=age,gender,smile,glasses,emotion,facialHair`, { url: url }, httpOptions);
+  async detect(url):Promise<FaceDetectResult[]> {
+    let urlStr:string =url;
+    if (urlStr.startsWith("data:image")){
+      let data = await fetch(urlStr);
+      let blob = await data.blob();
+
+      let ret= await fetch(`${this.baseUrl}/detect?returnFaceLandmarks=false&returnFaceAttributes=age,gender,smile,glasses,emotion,facialHair`,{
+        method:'POST',
+        headers: {
+          "Content-Type": "application/octet-stream",
+          'Ocp-Apim-Subscription-Key': 'd3d59f8ca8af4c7db5dbbcff898e6a37'
+        },
+        body:blob,
+      });
+      return await ret.json();
+    }
+    else{
+      var ret2= await this.http.post<FaceDetectResult[]>(`${this.baseUrl}/detect?returnFaceLandmarks=false&returnFaceAttributes=age,gender,smile,glasses,emotion,facialHair`, { url: url }, httpOptions).toPromise();
+      return ret2;
+    }
   }
 
   identify(personGroupId, faceIds) {
@@ -127,6 +169,6 @@ export class FaceApiService {
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'Ocp-Apim-Subscription-Key': '<specify Face API key here>'
+    'Ocp-Apim-Subscription-Key': 'd3d59f8ca8af4c7db5dbbcff898e6a37'
   })
 };

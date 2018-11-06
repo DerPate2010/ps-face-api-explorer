@@ -17,10 +17,15 @@ export class InputBoxComponent implements OnInit {
   save() {
     this.activeModal.close(this.inputValue);
   }
+
+  onSnap(img:string){
+    this.inputValue=img;
+  }
 }
 
 
 export class InputModalProperties {
   title: string;
   message: string;
+  capture: boolean;
 }

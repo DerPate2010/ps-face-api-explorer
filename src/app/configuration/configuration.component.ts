@@ -78,13 +78,12 @@ export class ConfigurationComponent implements OnInit {
     });
   }
 
-  addPersonFace() {
-    this.inputBox.show('Add Face', 'URL:').then(result => {
-      this.faceApi.addPersonFace(this.selectedGroupId, this.selectedPerson.personId, result).subscribe(data => {
-        let newFace = { persistedFaceId: data.persistedFaceId, userData: result };
-        this.personFaces.push(newFace);
-      });
-    });
+  async addPersonFace() {
+    let result= await this.inputBox.show('Add Face', 'URL:',true);
+    let data = await this.faceApi.addPersonFace(this.selectedGroupId, this.selectedPerson.personId, result);
+    let newFace = { persistedFaceId: data.persistedFaceId, userData: result };
+    this.personFaces.push(newFace);
+
   }
 
   deletePersonFace(persistedFaceId) {

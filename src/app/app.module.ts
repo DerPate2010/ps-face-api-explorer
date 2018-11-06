@@ -19,6 +19,8 @@ import { LoadingModule } from 'ngx-loading';
 import { ToasterModule } from 'angular2-toaster';
 import { FaceGroupingComponent } from './face-grouping/face-grouping.component';
 import { FindSimilarComponent } from './find-similar/find-similar.component';
+import { CameraCaptureComponent } from './camera-capture/camera-capture.component';
+import { FaceIdContiniousComponent } from './face-id-continious/face-id-continious.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { FindSimilarComponent } from './find-similar/find-similar.component';
     FaceTesterComponent,
     InputBoxComponent,
     FaceGroupingComponent,
-    FindSimilarComponent
+    FindSimilarComponent,
+    CameraCaptureComponent,
+    FaceIdContiniousComponent
   ],
   imports: [
     BrowserModule,

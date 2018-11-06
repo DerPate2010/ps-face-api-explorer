@@ -40,7 +40,7 @@ export class FindSimilarComponent implements OnInit {
         _.forEach(results, (value, index) => this.faces.push({ url: urls[index], faceId: value.persistedFaceId }));
 
         // 3. Call Detect on query face so we can establish a faceId 
-        this.faceApi.detect(this.queryFace).subscribe(queryFaceDetectResult => {
+        let queryFaceDetectResult = this.faceApi.detect(this.queryFace);
           let queryFaceId = queryFaceDetectResult[0].faceId;
 
           // 4. Call Find Similar with the query face and the face list
@@ -50,7 +50,7 @@ export class FindSimilarComponent implements OnInit {
             this.loading = false;
           });
         });
-      });
+
     });
   }
 

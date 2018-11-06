@@ -7,9 +7,9 @@ export class InputBoxService {
 
   constructor(private modal: NgbModal) { }
 
-  show(title: string, message: string) {
+  show(title: string, message: string, capture:boolean = false) {
     let modalRef = this.modal.open(InputBoxComponent);
-    modalRef.componentInstance.properties = <InputModalProperties>{ title: title, message: message };
+    modalRef.componentInstance.properties = <InputModalProperties>{ title: title, message: message , capture: capture };
 
     const promise = new Promise((resolve, reject) => {
       modalRef.result.then(result => resolve(result), reason => reason);
