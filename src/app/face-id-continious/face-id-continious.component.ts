@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 })
 export class FaceIdContiniousComponent implements OnInit, OnDestroy {
   run: boolean;
-  timerToken: NodeJS.Timer;
+  timerToken;
   @Output() detectedFace = new EventEmitter<string>();
 
   ngOnDestroy(): void {

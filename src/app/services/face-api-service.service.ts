@@ -16,7 +16,7 @@ interface FaceDetectResult{
 export class FaceApiService {
 
   private baseUrl = 'https://westeurope.api.cognitive.microsoft.com/face/v1.0';
-  private subscriptionKey = 'd3d59f8ca8af4c7db5dbbcff898e6a37';
+
   //Key d3d59f8ca8af4c7db5dbbcff898e6a37 is for demo purpose only and will be deactivated later
 
   constructor(private http: HttpClient) { }
@@ -93,7 +93,7 @@ export class FaceApiService {
         method:'POST',
         headers: {
           "Content-Type": "application/octet-stream",
-          'Ocp-Apim-Subscription-Key': this.subscriptionKey
+          'Ocp-Apim-Subscription-Key': subscriptionKey
         },
         body:blob,
       });
@@ -131,7 +131,7 @@ export class FaceApiService {
         method:'POST',
         headers: {
           "Content-Type": "application/octet-stream",
-          'Ocp-Apim-Subscription-Key':this.subscriptionKey
+          'Ocp-Apim-Subscription-Key':subscriptionKey
         },
         body:blob,
       });
@@ -167,10 +167,10 @@ export class FaceApiService {
 }
 
 // private (non-exported)
-
+const subscriptionKey = 'd3d59f8ca8af4c7db5dbbcff898e6a37';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
-    'Ocp-Apim-Subscription-Key': this.subscriptionKey
+    'Ocp-Apim-Subscription-Key': subscriptionKey
   })
 };
